@@ -1,0 +1,52 @@
+{
+  "name": "@nesbes/claudebridge",
+  "version": "2.0.2",
+  "description": "Any model. Any provider. One bridge to Claude Code. Smart routing, cost tracking, fallback chains, profiles, caching, and $$ live switching.",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "bin": {
+    "claudebridge": "src/cli.js",
+    "claudebridge-wizard": "src/wizard.js"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "wizard": "node src/wizard.js",
+    "launch": "node src/cli.js",
+    "claudebridge": "node src/cli.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "anthropic",
+    "openai",
+    "bridge",
+    "proxy",
+    "llm",
+    "ai",
+    "groq",
+    "ollama",
+    "deepseek",
+    "openrouter",
+    "model-switching",
+    "local-models",
+    "lm-studio"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2"
+  }
+}

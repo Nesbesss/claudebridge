@@ -1,0 +1,8 @@
+.env
+.env.backup
+claude-env.sh
+.claudebridge.log
+.ccmini-bridge.log
+.git/
+.github/
+node_modules/

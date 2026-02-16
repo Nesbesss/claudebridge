@@ -1,0 +1,32 @@
+
+# Dependencies
+node_modules/
+.npm/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+.claudebridge.env
+.claudebridge-env.sh
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.claudebridge.log
+.ccmini-bridge.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build artifacts (if any)
+dist/
+build/
