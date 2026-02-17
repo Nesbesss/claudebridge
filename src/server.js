@@ -13,6 +13,7 @@ const { SmartRouter, TASK_TYPES, extractText } = require('./router');
 const { CostTracker, formatCost, formatTokens, formatDuration } = require('./tracker');
 const { FallbackChain } = require('./fallback');
 const { ResponseCache } = require('./cache');
+const { loadToken, getChatToken } = require('./copilot'); // NEW
 
 const app = express();
 app.use(express.json({ limit: '5mb' }));
@@ -61,6 +62,18 @@ function anthropicContentToText(content) {
   }).filter(Boolean).join('\n');
 }
 
+function extractReasoning(text) {
+  if (!text) return { content: text, reasoning: null };
+  const match = text.match(/<reasoning>([\s\S]*?)<\/reasoning>\n?/);
+  if (match) {
+    return {
+      content: text.replace(match[0], '').trim(),
+      reasoning: match[1].trim()
+    };
+  }
+  return { content: text, reasoning: null };
+}
+
 function anthropicToolsToOpenAI(tools) {
   if (!tools || !tools.length) return undefined;
   return tools.map(function (t) {
@@ -75,7 +88,7 @@ function anthropicToolsToOpenAI(tools) {
   });
 }
 
-function anthropicToOpenAI(body) {
+function anthropicToOpenAI(body, supportsReasoning) {
   var systemText = anthropicContentToText(body.system);
   var mappedMessages = [];
   if (systemText) mappedMessages.push({ role: 'system', content: systemText });
@@ -86,7 +99,14 @@ function anthropicToOpenAI(body) {
 
     // String content — simple text message
     if (typeof content === 'string') {
-      mappedMessages.push({ role: msg.role, content: content });
+      if (supportsReasoning && msg.role === 'assistant') {
+        var extracted = extractReasoning(content);
+        var newMsg = { role: msg.role, content: extracted.content };
+        if (extracted.reasoning) newMsg.reasoning_content = extracted.reasoning;
+        mappedMessages.push(newMsg);
+      } else {
+        mappedMessages.push({ role: msg.role, content: content });
+      }
       continue;
     }
 
@@ -114,6 +134,12 @@ function anthropicToOpenAI(body) {
       // Assistant message with tool_use blocks → OpenAI assistant with tool_calls
       if (msg.role === 'assistant' && toolUseParts.length) {
         var assistantMsg = { role: 'assistant', content: textParts.join('\n') || null };
+        if (supportsReasoning) {
+          var combinedText = textParts.join('\n');
+          var extracted = extractReasoning(combinedText);
+          assistantMsg.content = extracted.content || null;
+          if (extracted.reasoning) assistantMsg.reasoning_content = extracted.reasoning;
+        }
         assistantMsg.tool_calls = toolUseParts.map(function (tu) {
           var inputStr;
           try { inputStr = typeof tu.input === 'string' ? tu.input : JSON.stringify(tu.input || {}); } catch (e) { inputStr = '{}'; }
@@ -232,6 +258,10 @@ function openAIToAnthropicResponse(openai, reqModel) {
   var message = choice.message || {};
   var text = message.content || '';
   var finishReason = choice.finish_reason || 'end_turn';
+  var reasoning = message.reasoning_content || message.reasoning || null;
+  if (reasoning) {
+    text = '<reasoning>\n' + reasoning + '\n</reasoning>\n\n' + text;
+  }
 
   // Build content blocks
   var contentBlocks = [];
@@ -451,6 +481,31 @@ async function makeUpstreamRequest(target, upstreamPayload, isStream) {
   var url = (target.baseUrl || getActiveBaseUrl()) + (target.chatPath || getActiveChatPath());
   var payload = Object.assign({}, upstreamPayload, { model: target.model || upstreamPayload.model });
   if (isStream) payload.stream = true;
+  // Inject Copilot Token
+  if (target.provider === 'github-copilot' || target.id === 'github-copilot') {
+    const oauth = loadToken();
+    if (oauth && oauth.access_token) {
+      try {
+        const chatToken = await getChatToken(oauth.access_token);
+        // Copilot headers are special
+        const headers = {
+          'Authorization': `Bearer ${chatToken}`, // Using the tid= token
+          'Content-Type': 'application/json',
+          'Editor-Version': 'vscode/1.85.0',
+          'Editor-Plugin-Version': 'copilot/1.155.0',
+          'User-Agent': 'GitHubCopilot/1.155.0',
+          'Accept': 'application/json',
+        };
+        // Override standard buildUpstreamHeaders
+        var r = await fetch(url, { method: 'POST', headers, body: JSON.stringify(payload) });
+        if (!r.ok) { var errText = await r.text(); var err = new Error(errText || 'Copilot request failed'); err.status = r.status; throw err; }
+        return r;
+      } catch (e) {
+        throw new Error('Copilot Token Refresh Failed: ' + e.message);
+      }
+    }
+  }
+
   var r = await fetch(url, { method: 'POST', headers: buildUpstreamHeaders(target.apiKey), body: JSON.stringify(payload) });
   if (!r.ok) { var errText = await r.text(); var err = new Error(errText || 'Upstream request failed'); err.status = r.status; throw err; }
   return r;
@@ -479,9 +534,26 @@ app.post('/v1/messages', async function (req, res) {
       if (routing.routed) { routedProvider = routing.provider; routedModel = routing.model; routedBaseUrl = routing.baseUrl; routedChatPath = routing.chatPath; if (BRIDGE_LOG_REQUESTS) console.log('[routing] ' + routing.reason); }
     }
 
-    var upstreamPayload = anthropicToOpenAI(body);
+    // Resolve active provider to check capabilities
+    var activeModel = routedModel || body.model || getActiveModel();
+    var activeProviderLabel = routedProvider || runtimeOverride.providerLabel; // can be null if default
+
+    // Find provider config
+    var providerConfig = null;
+    if (activeProviderLabel) {
+      providerConfig = PROVIDERS.find(function (p) { return p.id === activeProviderLabel || p.label === activeProviderLabel; });
+    }
+    // Fallback: search by model or base URL if not found by label
+    if (!providerConfig) {
+      var targetUrl = routedBaseUrl || getActiveBaseUrl();
+      providerConfig = PROVIDERS.find(function (p) { return p.model === activeModel || p.baseUrl === targetUrl; });
+    }
+
+    var supportsReasoning = providerConfig ? !!providerConfig.supportsReasoning : false;
+
+    var upstreamPayload = anthropicToOpenAI(body, supportsReasoning);
     if (routedModel) upstreamPayload.model = routedModel;
-    var activeModel = routedModel || upstreamPayload.model;
+    // activeModel and activeProvider already defined above
     var activeProvider = routedProvider || runtimeOverride.providerLabel || 'default';
     var url = (routedBaseUrl || getActiveBaseUrl()) + (routedChatPath || getActiveChatPath());
     if (BRIDGE_LOG_REQUESTS) console.log('/v1/messages model=' + activeModel + ' provider=' + activeProvider + ' stream=' + !!upstreamPayload.stream);
@@ -542,6 +614,8 @@ app.post('/v1/messages', async function (req, res) {
 
     // Track content blocks: text (index 0) and tool_calls (index 1+)
     var textBlockStarted = false;
+    var reasoningStarted = false;
+    var reasoningClosed = false;
     var toolCallAccumulators = {};  // keyed by tool_call index
     var nextContentIndex = 0;
     var toolCallIndexToContentIndex = {}; // maps OpenAI tool_call index to Anthropic content block index
@@ -574,6 +648,28 @@ app.post('/v1/messages', async function (req, res) {
 
         // Handle text content
         var deltaText = delta.content;
+        var deltaReasoning = delta.reasoning_content || delta.reasoning;
+
+        if (deltaReasoning) {
+          if (!reasoningStarted) {
+            sseWrite(res, 'content_block_start', { type: 'content_block_start', index: nextContentIndex, content_block: { type: 'text', text: '' } });
+            sseWrite(res, 'content_block_delta', { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: '<reasoning>\n' } });
+            reasoningStarted = true;
+            textBlockStarted = true;
+            nextContentIndex++;
+          }
+          streamedTokens++;
+          sseWrite(res, 'content_block_delta', { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: deltaReasoning } });
+        }
+
+        if (deltaText || (delta.tool_calls && reasoningStarted && !reasoningClosed)) {
+          // If we were reasoning and now switched to text or tools, close reasoning tag
+          if (reasoningStarted && !reasoningClosed) {
+            sseWrite(res, 'content_block_delta', { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: '\n</reasoning>\n\n' } });
+            reasoningClosed = true;
+          }
+        }
+
         if (deltaText) {
           if (!textBlockStarted) {
             sseWrite(res, 'content_block_start', { type: 'content_block_start', index: nextContentIndex, content_block: { type: 'text', text: '' } });
@@ -634,6 +730,11 @@ app.post('/v1/messages', async function (req, res) {
           else if (fr === 'tool_calls') finalFinishReason = 'tool_use';
           else if (fr === 'function_call') finalFinishReason = 'tool_use';
           else finalFinishReason = fr;
+
+          if (reasoningStarted && !reasoningClosed) {
+            sseWrite(res, 'content_block_delta', { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: '\n</reasoning>\n\n' } });
+            reasoningClosed = true;
+          }
         }
         if (payload && payload.usage) { inputTokens = payload.usage.prompt_tokens || inputTokens; outputTokens = payload.usage.completion_tokens || outputTokens; }
       }

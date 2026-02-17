@@ -7,6 +7,13 @@ const PROVIDERS = [
     model: 'minimax/minimax-2.5-chat',
   },
   {
+    id: 'github-copilot',
+    label: 'GitHub Copilot',
+    baseUrl: 'https://api.githubcopilot.com',
+    chatPath: '/chat/completions',
+    model: 'gpt-4o',
+  },
+  {
     id: 'openrouter',
     label: 'OpenRouter',
     baseUrl: 'https://openrouter.ai',
@@ -103,6 +110,7 @@ const PROVIDERS = [
     baseUrl: 'https://api.deepseek.com',
     chatPath: '/v1/chat/completions',
     model: 'deepseek-chat',
+    supportsReasoning: true,
   },
   {
     id: 'moonshot',
@@ -110,6 +118,7 @@ const PROVIDERS = [
     baseUrl: 'https://api.moonshot.ai',
     chatPath: '/v1/chat/completions',
     model: 'moonshot-v1-8k',
+    supportsReasoning: true,
   },
   {
     id: '01ai',
@@ -138,6 +147,7 @@ const PROVIDERS = [
     baseUrl: 'https://api.siliconflow.cn',
     chatPath: '/v1/chat/completions',
     model: 'Qwen/Qwen2.5-72B-Instruct',
+    supportsReasoning: true,
   },
   {
     id: 'inference-net',
