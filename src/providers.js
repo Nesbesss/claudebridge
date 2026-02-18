@@ -1,10 +1,22 @@
 const PROVIDERS = [
   {
+    id: 'claude-web',
+    label: 'Claude.ai (Free)',
+    baseUrl: 'https://claude.ai',
+    chatPath: '/api/organizations',
+    model: 'claude-sonnet-4-5',
+    requiresApiKey: false,
+    apiKeyUrl: 'https://claude.ai',
+    note: 'Uses your claude.ai browser session — no API key needed',
+  },
+  {
     id: 'opencode-zen',
     label: 'OpenCode Zen',
     baseUrl: 'https://opencode.ai',
     chatPath: '/zen/v1/chat/completions',
     model: 'minimax/minimax-2.5-chat',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://opencode.ai/dashboard',
   },
   {
     id: 'github-copilot',
@@ -12,6 +24,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.githubcopilot.com',
     chatPath: '/chat/completions',
     model: 'gpt-4o',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://github.com/settings/copilot',
   },
   {
     id: 'openrouter',
@@ -19,6 +33,8 @@ const PROVIDERS = [
     baseUrl: 'https://openrouter.ai',
     chatPath: '/api/v1/chat/completions',
     model: 'openai/gpt-4o-mini',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://openrouter.ai/keys',
   },
   {
     id: 'openai',
@@ -26,6 +42,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.openai.com',
     chatPath: '/v1/chat/completions',
     model: 'gpt-4o-mini',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://platform.openai.com/api-keys',
   },
   {
     id: 'groq',
@@ -33,6 +51,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.groq.com',
     chatPath: '/openai/v1/chat/completions',
     model: 'llama-3.3-70b-versatile',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://console.groq.com/keys',
   },
   {
     id: 'together',
@@ -40,6 +60,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.together.xyz',
     chatPath: '/v1/chat/completions',
     model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://api.together.xyz/settings/api-keys',
   },
   {
     id: 'fireworks',
@@ -47,6 +69,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.fireworks.ai',
     chatPath: '/inference/v1/chat/completions',
     model: 'accounts/fireworks/models/llama-v3p1-70b-instruct',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://fireworks.ai/account/api-keys',
   },
   {
     id: 'mistral',
@@ -54,6 +78,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.mistral.ai',
     chatPath: '/v1/chat/completions',
     model: 'mistral-small-latest',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://console.mistral.ai/api-keys',
   },
   {
     id: 'xai',
@@ -61,6 +87,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.x.ai',
     chatPath: '/v1/chat/completions',
     model: 'grok-2-latest',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://console.x.ai',
   },
   {
     id: 'deepinfra',
@@ -68,6 +96,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.deepinfra.com',
     chatPath: '/v1/openai/chat/completions',
     model: 'meta-llama/Meta-Llama-3.3-70B-Instruct',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://deepinfra.com/dash/api_keys',
   },
   {
     id: 'perplexity',
@@ -75,6 +105,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.perplexity.ai',
     chatPath: '/chat/completions',
     model: 'sonar',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://www.perplexity.ai/settings/api',
   },
   {
     id: 'nvidia-nim',
@@ -82,6 +114,8 @@ const PROVIDERS = [
     baseUrl: 'https://integrate.api.nvidia.com',
     chatPath: '/v1/chat/completions',
     model: 'meta/llama-3.1-70b-instruct',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://build.nvidia.com/explore/discover',
   },
   {
     id: 'cerebras',
@@ -89,6 +123,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.cerebras.ai',
     chatPath: '/v1/chat/completions',
     model: 'llama-3.3-70b',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://cloud.cerebras.ai/platform/',
   },
   {
     id: 'sambanova',
@@ -96,6 +132,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.sambanova.ai',
     chatPath: '/v1/chat/completions',
     model: 'Meta-Llama-3.1-70B-Instruct',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://cloud.sambanova.ai/apis',
   },
   {
     id: 'anyscale',
@@ -103,6 +141,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.endpoints.anyscale.com',
     chatPath: '/v1/chat/completions',
     model: 'meta-llama/Llama-3.1-70B-Instruct',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://console.anyscale.com/o/default/configurations/app-config',
   },
   {
     id: 'deepseek',
@@ -111,6 +151,8 @@ const PROVIDERS = [
     chatPath: '/v1/chat/completions',
     model: 'deepseek-chat',
     supportsReasoning: true,
+    requiresApiKey: true,
+    apiKeyUrl: 'https://platform.deepseek.com/api_keys',
   },
   {
     id: 'moonshot',
@@ -119,6 +161,8 @@ const PROVIDERS = [
     chatPath: '/v1/chat/completions',
     model: 'moonshot-v1-8k',
     supportsReasoning: true,
+    requiresApiKey: true,
+    apiKeyUrl: 'https://platform.moonshot.cn/console/api-keys',
   },
   {
     id: '01ai',
@@ -126,6 +170,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.lingyiwanwu.com',
     chatPath: '/v1/chat/completions',
     model: 'yi-large',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://platform.lingyiwanwu.com/apikeys',
   },
   {
     id: 'hyperbolic',
@@ -133,6 +179,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.hyperbolic.xyz',
     chatPath: '/v1/chat/completions',
     model: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://app.hyperbolic.xyz/settings/api-keys',
   },
   {
     id: 'novita',
@@ -140,6 +188,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.novita.ai',
     chatPath: '/v3/openai/chat/completions',
     model: 'meta-llama/llama-3.1-70b-instruct',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://novita.ai/dashboard/key',
   },
   {
     id: 'siliconflow',
@@ -148,6 +198,8 @@ const PROVIDERS = [
     chatPath: '/v1/chat/completions',
     model: 'Qwen/Qwen2.5-72B-Instruct',
     supportsReasoning: true,
+    requiresApiKey: true,
+    apiKeyUrl: 'https://cloud.siliconflow.cn/account/ak',
   },
   {
     id: 'inference-net',
@@ -155,6 +207,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.inference.net',
     chatPath: '/v1/chat/completions',
     model: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://inference.net/',
   },
   {
     id: 'friendli',
@@ -162,6 +216,8 @@ const PROVIDERS = [
     baseUrl: 'https://api.friendli.ai',
     chatPath: '/dedicated/v1/chat/completions',
     model: 'meta-llama-3.1-70b-instruct',
+    requiresApiKey: true,
+    apiKeyUrl: 'https://suite.friendli.ai/user-settings/tokens',
   },
   {
     id: 'ollama',
@@ -170,6 +226,7 @@ const PROVIDERS = [
     chatPath: '/v1/chat/completions',
     model: 'llama3.3',
     local: true,
+    requiresApiKey: false,
   },
   {
     id: 'lmstudio',
@@ -178,6 +235,7 @@ const PROVIDERS = [
     chatPath: '/v1/chat/completions',
     model: 'local-model',
     local: true,
+    requiresApiKey: false,
   },
   {
     id: 'jan',
@@ -186,6 +244,7 @@ const PROVIDERS = [
     chatPath: '/v1/chat/completions',
     model: 'local-model',
     local: true,
+    requiresApiKey: false,
   },
   {
     id: 'llamacpp',
@@ -194,6 +253,7 @@ const PROVIDERS = [
     chatPath: '/v1/chat/completions',
     model: 'local-model',
     local: true,
+    requiresApiKey: false,
   },
   {
     id: 'vllm',
@@ -202,6 +262,7 @@ const PROVIDERS = [
     chatPath: '/v1/chat/completions',
     model: 'local-model',
     local: true,
+    requiresApiKey: false,
   },
   {
     id: 'custom',
@@ -210,6 +271,7 @@ const PROVIDERS = [
     chatPath: '',
     model: 'gpt-4o-mini',
     requiresEndpointInput: true,
+    requiresApiKey: true,
   },
   {
     id: 'modal-custom',
@@ -218,14 +280,8 @@ const PROVIDERS = [
     chatPath: '',
     model: 'your-modal-model',
     requiresEndpointInput: true,
+    requiresApiKey: true,
   },
 ];
-
-function getProviderById(id) {
-  return PROVIDERS.find((p) => p.id === id) || null;
-}
-
-module.exports = {
-  PROVIDERS,
-  getProviderById,
-};
+const getProviderById = (id) => PROVIDERS.find((p) => p.id === id) || null;
+module.exports = { PROVIDERS, getProviderById };

@@ -1,47 +1,42 @@
-/* ═══════════════════════════════════════════════════════════════
-   ClaudeBridge — Cost & Speed Tracker
-   ═══════════════════════════════════════════════════════════════
-   Real-time tracking of:
-   • Token usage (input/output per request)
-   • Estimated cost per provider/model
-   • Response latency (TTFT + total)
-   • Tokens per second throughput
-   • Session & all-time stats
-   ═══════════════════════════════════════════════════════════════ */
-
 const fs = require('node:fs');
 const path = require('node:path');
+const os = require('node:os');
 
 /* ── Pricing database ($/1M tokens) ───────────────────────── */
-// Prices as of mid-2025, best-effort. Users can override.
+// Prices as of early 2026, best-effort. Users can override.
 const MODEL_PRICING = {
   // OpenAI
   'gpt-4o': { input: 2.50, output: 10.00 },
   'gpt-4o-mini': { input: 0.15, output: 0.60 },
-  'gpt-4.1': { input: 2.00, output: 8.00 },
-  'gpt-4.1-mini': { input: 0.40, output: 1.60 },
-  'gpt-4.1-nano': { input: 0.10, output: 0.40 },
-  'o3': { input: 2.00, output: 8.00 },
+  'o1': { input: 15.00, output: 60.00 },
+  'o1-mini': { input: 3.00, output: 12.00 },
   'o3-mini': { input: 1.10, output: 4.40 },
-  'o4-mini': { input: 1.10, output: 4.40 },
+
+  // Anthropic (for tracking if used via proxy/routing)
+  'claude-3-5-sonnet': { input: 3.00, output: 15.00 },
+  'claude-3-5-haiku': { input: 0.80, output: 4.00 },
+  'claude-3-opus': { input: 15.00, output: 75.00 },
+  'claude-3-sonnet': { input: 3.00, output: 15.00 },
+  'claude-3-haiku': { input: 0.25, output: 1.25 },
 
   // DeepSeek
   'deepseek-chat': { input: 0.14, output: 0.28 },
   'deepseek-reasoner': { input: 0.55, output: 2.19 },
 
   // Meta Llama (via inference providers)
-  'llama-3.3-70b-versatile': { input: 0.59, output: 0.79 },
-  'meta-llama/Llama-3.3-70B-Instruct-Turbo': { input: 0.59, output: 0.79 },
-  'meta-llama/Meta-Llama-3.3-70B-Instruct': { input: 0.59, output: 0.79 },
-  'meta/llama-3.1-70b-instruct': { input: 0.59, output: 0.79 },
-  'llama-3.3-70b': { input: 0.59, output: 0.79 },
+  'llama-3.3-70b': { input: 0.60, output: 0.80 },
+  'llama-3.1-405b': { input: 3.00, output: 3.00 },
+  'llama-3.1-70b': { input: 0.60, output: 0.80 },
+  'llama-3.1-8b': { input: 0.10, output: 0.10 },
 
   // Mistral
   'mistral-small-latest': { input: 0.10, output: 0.30 },
   'mistral-large-latest': { input: 2.00, output: 6.00 },
+  'pixtral-12b': { input: 0.15, output: 0.15 },
 
-  // Groq (free tier / very cheap)
-  'llama3-70b-8192': { input: 0.59, output: 0.79 },
+  // Groq / Cerebras / Together / Fireworks
+  'llama3-70b-8192': { input: 0.60, output: 0.80 },
+  'qwen2.5-72b': { input: 0.35, output: 0.40 },
 
   // xAI
   'grok-2-latest': { input: 2.00, output: 10.00 },
@@ -49,11 +44,8 @@ const MODEL_PRICING = {
   // Perplexity
   'sonar': { input: 1.00, output: 1.00 },
 
-  // Qwen
-  'Qwen/Qwen2.5-72B-Instruct': { input: 0.35, output: 0.40 },
-
   // MiniMax
-  'minimax/minimax-2.5-chat': { input: 0.00, output: 0.00 },  // free
+  'minimax/minimax-2.5-chat': { input: 0.00, output: 0.00 }, // free tier or covered
   'minimax-m2.5-free': { input: 0.00, output: 0.00 },
 
   // Local models (free)
@@ -71,7 +63,7 @@ class CostTracker {
     this.enabled = options.enabled !== false;
     this.dataDir = options.dataDir || path.join(os.homedir(), '.claudebridge');
     this.customPricing = options.pricing || {};
-    this.budgetLimit = options.budgetLimit || null;  // $ per session, null = no limit
+    this.budgetLimit = options.budgetLimit || null; // $ per session, null = no limit
     this.budgetWarningPct = options.budgetWarningPct || 0.8;
 
     // Session stats
@@ -89,7 +81,7 @@ class CostTracker {
       byModel: {},
       byProvider: {},
       errors: 0,
-      history: [],  // last N requests
+      history: [], // last N requests
     };
 
     this.maxHistory = 100;
@@ -104,6 +96,7 @@ class CostTracker {
 
   /** Get pricing for a model */
   getPricing(model) {
+    if (!model) return DEFAULT_PRICING;
     // Check custom pricing first
     if (this.customPricing[model]) return this.customPricing[model];
     // Check built-in
@@ -112,8 +105,9 @@ class CostTracker {
     const shortName = model.split('/').pop();
     if (MODEL_PRICING[shortName]) return MODEL_PRICING[shortName];
     // Try fuzzy match
+    const modelLower = model.toLowerCase();
     for (const [key, val] of Object.entries(MODEL_PRICING)) {
-      if (model.includes(key) || key.includes(model)) return val;
+      if (modelLower.includes(key.toLowerCase()) || key.toLowerCase().includes(modelLower)) return val;
     }
     return DEFAULT_PRICING;
   }
@@ -330,20 +324,20 @@ class CostTracker {
 
 /* ── Formatting Helpers ───────────────────────────────────── */
 
-function formatCost(cost) {
+const formatCost = (cost) => {
   if (cost === 0) return '$0.00';
   if (cost < 0.01) return `$${cost.toFixed(4)}`;
   if (cost < 1) return `$${cost.toFixed(3)}`;
   return `$${cost.toFixed(2)}`;
-}
+};
 
-function formatTokens(n) {
+const formatTokens = (n) => {
   if (n < 1000) return String(n);
   if (n < 1_000_000) return `${(n / 1000).toFixed(1)}K`;
   return `${(n / 1_000_000).toFixed(2)}M`;
-}
+};
 
-function formatDuration(ms) {
+const formatDuration = (ms) => {
   const sec = Math.floor(ms / 1000);
   if (sec < 60) return `${sec}s`;
   const min = Math.floor(sec / 60);
@@ -352,7 +346,7 @@ function formatDuration(ms) {
   const hr = Math.floor(min / 60);
   const remMin = min % 60;
   return `${hr}h ${remMin}m`;
-}
+};
 
 module.exports = {
   CostTracker,

@@ -1,13 +1,3 @@
-/* ═══════════════════════════════════════════════════════════════
-   ClaudeBridge — Fallback Chains & Auto-Retry
-   ═══════════════════════════════════════════════════════════════
-   Features:
-   • Ordered fallback chains (if A fails → try B → try C)
-   • Configurable retry with exponential backoff
-   • Circuit breaker per provider (auto-disable after N failures)
-   • Health-aware routing (skip unhealthy providers)
-   ═══════════════════════════════════════════════════════════════ */
-
 const { getProviderById } = require('./providers');
 
 /* ── Circuit Breaker States ───────────────────────────────── */
@@ -36,7 +26,6 @@ class CircuitBreaker {
   canRequest() {
     if (this.state === CIRCUIT_STATE.CLOSED) return true;
     if (this.state === CIRCUIT_STATE.OPEN) {
-      // Check if enough time has passed to try again
       if (Date.now() - this.lastFailureTime >= this.resetTimeMs) {
         this.state = CIRCUIT_STATE.HALF_OPEN;
         this.halfOpenAttempts = 0;
@@ -44,7 +33,6 @@ class CircuitBreaker {
       }
       return false;
     }
-    // HALF_OPEN
     return this.halfOpenAttempts < this.halfOpenMaxAttempts;
   }
 
@@ -95,16 +83,10 @@ class FallbackChain {
     this.backoffMultiplier = options.backoffMultiplier || 2;
     this.maxRetryDelayMs = options.maxRetryDelayMs || 10000;
 
-    // Default fallback order
     this.chain = options.chain || [];
-
-    // Circuit breakers per provider
     this.breakers = new Map();
-
-    // Provider-specific API keys
     this.providerKeys = new Map();
 
-    // Stats
     this.stats = {
       totalFallbacks: 0,
       totalRetries: 0,
@@ -130,22 +112,16 @@ class FallbackChain {
     return this.breakers.get(providerId);
   }
 
-  /**
-   * Execute a request with fallback support.
-   * @param {Function} requestFn - async (provider, model, baseUrl, chatPath, apiKey) => response
-   * @param {Object} primary - { provider, model, baseUrl, chatPath, apiKey }
-   * @returns {Object} { response, usedProvider, usedModel, attempts, fallbackUsed }
-   */
+  /** Execute a request with fallback support. */
   async execute(requestFn, primary) {
     if (!this.enabled) {
       const response = await this._retryRequest(requestFn, primary);
       return { response, usedProvider: primary.provider, usedModel: primary.model, attempts: 1, fallbackUsed: false };
     }
 
-    // Build attempt order: primary first, then fallback chain
     const attempts = [primary];
     for (const chainId of this.chain) {
-      if (chainId === primary.provider) continue;  // skip if same as primary
+      if (chainId === primary.provider) continue;
       const p = getProviderById(chainId);
       if (!p) continue;
       const key = this.providerKeys.get(chainId) || primary.apiKey;
@@ -164,18 +140,13 @@ class FallbackChain {
 
     for (const target of attempts) {
       const breaker = this.getBreaker(target.provider);
-
-      if (!breaker.canRequest()) {
-        // Skip — circuit is open
-        continue;
-      }
+      if (!breaker.canRequest()) continue;
 
       attemptCount++;
       try {
         const response = await this._retryRequest(requestFn, target);
         breaker.recordSuccess();
 
-        // Track stats
         if (!this.stats.byProvider[target.provider]) {
           this.stats.byProvider[target.provider] = { successes: 0, failures: 0 };
         }
@@ -206,7 +177,6 @@ class FallbackChain {
       }
     }
 
-    // All providers failed
     throw lastError || new Error('All providers in fallback chain failed');
   }
 
@@ -222,7 +192,6 @@ class FallbackChain {
         lastError = err;
         this.stats.totalRetries++;
 
-        // Don't retry on client errors (4xx)
         if (err.status && err.status >= 400 && err.status < 500) {
           throw err;
         }
@@ -239,21 +208,20 @@ class FallbackChain {
 
   /** Get chain status */
   getStatus() {
-    const chain = [];
-    for (const id of this.chain) {
+    const chainDetails = this.chain.map(id => {
       const p = getProviderById(id);
-      const breaker = this.breakers.has(id) ? this.breakers.get(id).getStatus() : null;
-      chain.push({
+      const breaker = this.breakers.get(id)?.getStatus() || null;
+      return {
         id,
         label: p?.label || id,
         hasKey: this.providerKeys.has(id),
         circuit: breaker,
-      });
-    }
+      };
+    });
 
     return {
       enabled: this.enabled,
-      chain,
+      chain: chainDetails,
       maxRetries: this.maxRetries,
       stats: { ...this.stats },
     };
@@ -261,9 +229,7 @@ class FallbackChain {
 
   /** Reset all circuit breakers */
   resetBreakers() {
-    for (const breaker of this.breakers.values()) {
-      breaker.reset();
-    }
+    this.breakers.forEach(breaker => breaker.reset());
   }
 }
 

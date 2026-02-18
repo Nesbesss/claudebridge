@@ -1,26 +1,16 @@
-/* ═══════════════════════════════════════════════════════════════
-   ClaudeBridge — Smart Auto-Routing Engine
-   ═══════════════════════════════════════════════════════════════
-   Routes requests to the optimal model/provider based on:
-   • Task type detection (code, think, quick, creative, long-context)
-   • Token length estimation
-   • Provider capabilities
-   • User-defined routing rules
-   ═══════════════════════════════════════════════════════════════ */
-
 const { PROVIDERS, getProviderById } = require('./providers');
 
 /* ── Task Type Classifiers ─────────────────────────────────── */
 
 const TASK_TYPES = {
-  think:       { label: 'Deep Thinking',  icon: '🧠', description: 'Complex reasoning, math, logic puzzles' },
-  code:        { label: 'Code',           icon: '💻', description: 'Code generation, debugging, refactoring' },
-  quick:       { label: 'Quick',          icon: '⚡', description: 'Simple questions, translations, lookups' },
-  creative:    { label: 'Creative',       icon: '🎨', description: 'Writing, brainstorming, storytelling' },
-  longContext: { label: 'Long Context',   icon: '📄', description: 'Large file analysis, summarization' },
-  webSearch:   { label: 'Web Search',     icon: '🔍', description: 'Questions requiring current information' },
-  image:       { label: 'Image',          icon: '🖼️', description: 'Image analysis or generation' },
-  default:     { label: 'General',        icon: '💬', description: 'General conversation' },
+  think: { label: 'Deep Thinking', icon: '🧠', description: 'Complex reasoning, math, logic puzzles' },
+  code: { label: 'Code', icon: '💻', description: 'Code generation, debugging, refactoring' },
+  quick: { label: 'Quick', icon: '⚡', description: 'Simple questions, translations, lookups' },
+  creative: { label: 'Creative', icon: '🎨', description: 'Writing, brainstorming, storytelling' },
+  longContext: { label: 'Long Context', icon: '📄', description: 'Large file analysis, summarization' },
+  webSearch: { label: 'Web Search', icon: '🔍', description: 'Questions requiring current information' },
+  image: { label: 'Image', icon: '🖼️', description: 'Image analysis or generation' },
+  default: { label: 'General', icon: '💬', description: 'General conversation' },
 };
 
 // Keyword patterns for task classification
@@ -44,7 +34,7 @@ const TASK_PATTERNS = {
       /\b(api|endpoint|database|sql|query|schema|migration)\b/i,
       /\b(git|commit|merge|branch|pull request|PR|CI\/CD)\b/i,
       /\b(test|unit test|integration test|e2e|jest|mocha|pytest)\b/i,
-      /```[\s\S]*```/,  // code blocks
+      /```[\s\S]*```/, // code blocks
       /\b(npm|pip|cargo|brew|apt|yarn|pnpm)\b/i,
       /\b(dockerfile|docker|kubernetes|k8s|terraform|aws|gcp|azure)\b/i,
     ],
@@ -55,7 +45,7 @@ const TASK_PATTERNS = {
       /^(what is|who is|when was|where is|how many|how much|define)\b/i,
       /^(yes or no|true or false|is it)\b/i,
       /\b(translate|convert|what does .{1,20} mean)\b/i,
-      /^.{0,60}$/,  // very short messages
+      /^.{0,60}$/, // very short messages
     ],
     minScore: 2,
   },
@@ -75,7 +65,6 @@ const TASK_PATTERNS = {
       /\b(entire file|whole document|full text|all of|complete)\b/i,
       /\b(analyze this|review this|look at this|read through)\b/i,
     ],
-    // Also triggered by message length
     minScore: 1,
     minTokens: 4000,
   },
@@ -100,18 +89,34 @@ const TASK_PATTERNS = {
 
 /* ── Token Estimation ─────────────────────────────────────── */
 
-function estimateTokens(text) {
+const estimateTokens = (text) => {
   if (!text) return 0;
   // Rough estimate: ~4 chars per token for English, ~2.5 for code
   const hasCode = /```[\s\S]*```/.test(text) || /\b(function|class|const|let|var|import|def )\b/.test(text);
   const ratio = hasCode ? 2.5 : 4;
   return Math.ceil(text.length / ratio);
-}
+};
 
 /* ── Task Type Detection ──────────────────────────────────── */
 
-function detectTaskType(messages) {
-  if (!messages || !messages.length) return 'default';
+const extractText = (content) => {
+  if (!content) return '';
+  if (typeof content === 'string') return content;
+  if (Array.isArray(content)) {
+    return content
+      .map(b => {
+        if (typeof b === 'string') return b;
+        if (b?.type === 'text') return b.text || '';
+        if (b?.type === 'input_text') return b.text || '';
+        return '';
+      })
+      .join('\n');
+  }
+  return '';
+};
+
+const detectTaskType = (messages) => {
+  if (!messages?.length) return 'default';
 
   // Get the last user message
   const lastMsg = messages[messages.length - 1];
@@ -143,36 +148,20 @@ function detectTaskType(messages) {
 
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
   return sorted[0][0];
-}
-
-function extractText(content) {
-  if (!content) return '';
-  if (typeof content === 'string') return content;
-  if (Array.isArray(content)) {
-    return content
-      .map(b => {
-        if (typeof b === 'string') return b;
-        if (b?.type === 'text') return b.text || '';
-        if (b?.type === 'input_text') return b.text || '';
-        return '';
-      })
-      .join('\n');
-  }
-  return '';
-}
+};
 
 /* ── Routing Rules ────────────────────────────────────────── */
 
 // Default routing table — maps task types to provider preferences
 const DEFAULT_ROUTES = {
-  think:       { prefer: ['deepseek', 'openai', 'openrouter'], modelHint: 'deepseek-reasoner' },
-  code:        { prefer: ['deepseek', 'fireworks', 'groq'], modelHint: null },
-  quick:       { prefer: ['groq', 'cerebras', 'sambanova'], modelHint: null },
-  creative:    { prefer: ['openai', 'mistral', 'openrouter'], modelHint: null },
+  think: { prefer: ['deepseek', 'openai', 'openrouter'], modelHint: 'deepseek-reasoner' },
+  code: { prefer: ['deepseek', 'fireworks', 'groq'], modelHint: null },
+  quick: { prefer: ['groq', 'cerebras', 'sambanova'], modelHint: null },
+  creative: { prefer: ['openai', 'mistral', 'openrouter'], modelHint: null },
   longContext: { prefer: ['deepinfra', 'together', 'openrouter'], modelHint: null },
-  webSearch:   { prefer: ['perplexity', 'openrouter'], modelHint: 'sonar' },
-  image:       { prefer: ['openai', 'openrouter'], modelHint: 'gpt-4o' },
-  default:     { prefer: [], modelHint: null },
+  webSearch: { prefer: ['perplexity', 'openrouter'], modelHint: 'sonar' },
+  image: { prefer: ['openai', 'openrouter'], modelHint: 'gpt-4o' },
+  default: { prefer: [], modelHint: null },
 };
 
 /* ── Router Class ─────────────────────────────────────────── */
@@ -262,20 +251,18 @@ class SmartRouter {
 
   /** Export for $$ commands */
   getRoutingTable() {
-    const table = [];
-    for (const [type, info] of Object.entries(TASK_TYPES)) {
+    return Object.entries(TASK_TYPES).map(([type, info]) => {
       const route = this.routes[type] || {};
       const configured = (route.prefer || []).filter(p => this.configuredProviders.has(p));
-      table.push({
+      return {
         type,
         ...info,
         prefer: route.prefer || [],
         configured,
         modelHint: route.modelHint || null,
         active: configured.length > 0,
-      });
-    }
-    return table;
+      };
+    });
   }
 }
 

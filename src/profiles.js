@@ -12,6 +12,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const os = require('node:os');
 
 const PROFILES_DIR = path.join(os.homedir(), '.claudebridge', 'profiles');
 const ACTIVE_PROFILE_PATH = path.join(os.homedir(), '.claudebridge', 'active-profile');
