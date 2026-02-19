@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wizard / docs / claudebridge</title>
+  <script type="module" crossorigin src="../assets/main-D6XrehnB.js"></script>
+  <link rel="stylesheet" crossorigin href="../assets/main-Mt7pFx2-.css">
+</head>
+
+<body>
+    <div id="cursor"></div>
+    <div class="toast" id="toast">COPIED TO CLIPBOARD</div>
+
+    <div class="page visible" id="page">
+        <canvas id="ascii-bg"></canvas>
+        <nav>
+            <div class="nav-logo">// claudebridge</div>
+            <div class="nav-links">
+                <a href="../index.html">home</a>
+                <a href="index.html" class="active">docs</a>
+                <a href="../install.html">install</a>
+                <a href="../models.html">models</a>
+                <a href="https://github.com/Nesbesss/claudebridge" target="_blank">github ↗</a>
+            </div>
+            <div class="nav-tag" style="display:flex; align-items:center; gap:16px;">
+                <button class="theme-toggle" onclick="toggleTheme(event)"><i>🌙</i></button>
+                <div><span class="status-dot"></span>v2.1.0 · stable</div>
+            </div>
+        </nav>
+
+        <div class="docs-container">
+            <!-- SIDEBAR -->
+            <aside class="docs-sidebar">
+                <div class="docs-sidebar-label">documentation</div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Basics</div>
+                    <div class="docs-nav-links">
+                        <a href="index.html" class="docs-nav-link">Overview</a>
+                        <a href="quickstart.html" class="docs-nav-link">Quickstart</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Setup</div>
+                    <div class="docs-nav-links">
+                        <a href="installation.html" class="docs-nav-link">Installation</a>
+                        <a href="authentication.html" class="docs-nav-link">Authentication</a>
+                        <a href="wizard.html" class="docs-nav-link active">Interactive Wizard</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Core Concepts</div>
+                    <div class="docs-nav-links">
+                        <a href="intercepts.html" class="docs-nav-link">Live Intercepts ($$)</a>
+                        <a href="swapping.html" class="docs-nav-link">Model Swapping</a>
+                        <a href="profiles.html" class="docs-nav-link">Profiles & Persistence</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Reference</div>
+                    <div class="docs-nav-links">
+                        <a href="cli.html" class="docs-nav-link">CLI Flags</a>
+                        <a href="protocol.html" class="docs-nav-link">Protocol Spec</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Advanced</div>
+                    <div class="docs-nav-links">
+                        <a href="routing.html" class="docs-nav-link">Agentic Routing</a>
+                        <a href="caching.html" class="docs-nav-link">Semantic Caching</a>
+                        <a href="doctor.html" class="docs-nav-link">The Doctor Tool</a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="docs-content">
+                <section class="docs-section">
+                    <h1 class="docs-heading">Interactive Wizard</h1>
+                    <p class="docs-text">Configuring complex LLM providers and bridging them to Claude Code shouldn't
+                        require a degree in infrastructure. The ClaudeBridge <code>--wizard</code> is an interactive
+                        utility designed to get you from zero to agentic in under 60 seconds.</p>
+
+                    <h3 class="docs-subheading">Getting Started</h3>
+                    <p class="docs-text">To launch the interactive setup, simply run:</p>
+                    <div class="docs-code-block">
+                        <div class="docs-code-label">EXECUTE</div>
+                        claudebridge --wizard
+                    </div>
+
+                    <h3 class="docs-subheading">Step-by-Step Flow</h3>
+                    <p class="docs-text">The wizard will guide you through the following sequence:</p>
+                    <ul class="docs-list">
+                        <li><strong>Provider Selection:</strong> Choose from a curated list of providers (OpenAI, Groq,
+                            Mistral, locally-hosted Ollama, etc.).</li>
+                        <li><strong>API Key Validation:</strong> Securely input your keys. The wizard performs a
+                            real-time "ping" test to ensure they are valid.</li>
+                        <li><strong>Model Selection:</strong> Pick the specific model variant (e.g., <code>Llama 3
+                                70B</code>, <code>GPT-4o</code>) that you want to bridge.</li>
+                        <li><strong>MCP Configuration:</strong> Automatically detect and update your
+                            <code>claude_desktop_config.json</code>
+                            to link the bridge.</li>
+                    </ul>
+
+                    <h3 class="docs-subheading">Automated Side Effects</h3>
+                    <p class="docs-text">When the wizard completes, it performs several behind-the-scenes actions:</p>
+                    <ul class="docs-list">
+                        <li>Creates/Updates <code>~/.claudebridge.env</code> with your configuration.</li>
+                        <li>Generates a persistence profile for your active model choice.</li>
+                        <li>Restarts the local shim server to apply new routing rules.</li>
+                        <li>Synchronizes with Claude Desktop settings if requested.</li>
+                    </ul>
+
+                    <div class="docs-note">
+                        <strong>Security Note:</strong> Your API keys are stored locally on your machine in your home
+                        directory. ClaudeBridge never transmits these keys to any third-party server other than the
+                        direct API endpoint of the provider you selected.
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <footer
+            style="border-top:1px solid var(--dim); padding:28px 40px; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:var(--muted); letter-spacing:0.15em;">
+            <div>// claudebridge · 2026</div>
+            <a href="https://github.com/Nesbesss/claudebridge" target="_blank"
+                style="color:var(--muted); text-decoration:none;">github ↗</a>
+        </footer>
+    </div>
+
+</body>
+
+</html>

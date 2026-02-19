@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>authentication / docs / claudebridge</title>
+  <script type="module" crossorigin src="../assets/main-D6XrehnB.js"></script>
+  <link rel="stylesheet" crossorigin href="../assets/main-Mt7pFx2-.css">
+</head>
+
+<body>
+    <div id="cursor"></div>
+    <div class="toast" id="toast">COPIED TO CLIPBOARD</div>
+
+    <div class="page visible" id="page">
+        <canvas id="ascii-bg"></canvas>
+        <nav>
+            <div class="nav-logo">// claudebridge</div>
+            <div class="nav-links">
+                <a href="../index.html">home</a>
+                <a href="index.html" class="active">docs</a>
+                <a href="../install.html">install</a>
+                <a href="../models.html">models</a>
+                <a href="https://github.com/Nesbesss/claudebridge" target="_blank">github ↗</a>
+            </div>
+            <div class="nav-tag" style="display:flex; align-items:center; gap:16px;">
+                <button class="theme-toggle" onclick="toggleTheme(event)"><i>🌙</i></button>
+                <div><span class="status-dot"></span>v2.1.0 · stable</div>
+            </div>
+        </nav>
+
+        <div class="docs-container">
+            <!-- SIDEBAR -->
+            <aside class="docs-sidebar">
+                <div class="docs-sidebar-label">documentation</div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Basics</div>
+                    <div class="docs-nav-links">
+                        <a href="index.html" class="docs-nav-link">Overview</a>
+                        <a href="quickstart.html" class="docs-nav-link">Quickstart</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Setup</div>
+                    <div class="docs-nav-links">
+                        <a href="installation.html" class="docs-nav-link">Installation</a>
+                        <a href="authentication.html" class="docs-nav-link active">Authentication</a>
+                        <a href="wizard.html" class="docs-nav-link">Interactive Wizard</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Core Concepts</div>
+                    <div class="docs-nav-links">
+                        <a href="intercepts.html" class="docs-nav-link">Live Intercepts ($$)</a>
+                        <a href="swapping.html" class="docs-nav-link">Model Swapping</a>
+                        <a href="profiles.html" class="docs-nav-link">Profiles & Persistence</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Reference</div>
+                    <div class="docs-nav-links">
+                        <a href="cli.html" class="docs-nav-link">CLI Flags</a>
+                        <a href="protocol.html" class="docs-nav-link">Protocol Spec</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Advanced</div>
+                    <div class="docs-nav-links">
+                        <a href="routing.html" class="docs-nav-link">Agentic Routing</a>
+                        <a href="caching.html" class="docs-nav-link">Semantic Caching</a>
+                        <a href="doctor.html" class="docs-nav-link">The Doctor Tool</a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="docs-content">
+                <section class="docs-section">
+                    <h1 class="docs-heading">Authentication</h1>
+                    <p class="docs-text">ClaudeBridge handles authentication at the kernel level. To communicate with
+                        upstream providers like OpenAI, Anthropic, or Groq, you must provide valid API keys. These are
+                        securely managed in your local environment.</p>
+
+                    <h3 class="docs-subheading">Environment Variables</h3>
+                    <p class="docs-text">The bridge automatically looks for keys in <code>~/.claudebridge.env</code>.
+                        You can also set these variables in your active terminal shell.</p>
+                    <div class="docs-code-block">
+                        <div class="docs-code-label">.env TEMPLATE</div>
+                        OPENAI_API_KEY=sk-proj-...<br>
+                        ANTHROPIC_API_KEY=sk-ant-api03-...<br>
+                        GROQ_API_KEY=gsk_...<br>
+                        MISTRAL_API_KEY=...
+                    </div>
+
+                    <h3 class="docs-subheading">Interactive Injection</h3>
+                    <p class="docs-text">If you don't want to store keys in a flat file, you can use the
+                        <code>--wizard</code> to securely input them into memory for the current session, or use the
+                        <code>--api-key</code> flag during startup.
+                    </p>
+                    <div class="docs-code-block">
+                        <div class="docs-code-label">CLI</div>
+                        claudebridge --provider openai --api-key sk-...
+                    </div>
+
+                    <h3 class="docs-subheading">Local Providers</h3>
+                    <p class="docs-text">For local nodes like Ollama, authentication is usually not required.
+                        ClaudeBridge defaults to null-auth for any <code>localhost</code> or <code>127.0.0.1</code>
+                        endpoints unless otherwise specified in your profile config.</p>
+
+                    <h3 class="docs-subheading">Provider Security</h3>
+                    <div class="docs-note">
+                        <strong>Encryption:</strong> ClaudeBridge does not encrypt keys on disk by default to maintain
+                        compatibility with standard <code>.env</code> workflows. Ensure your home directory permissions
+                        are restricted (<code>chmod 600 ~/.claudebridge.env</code>).
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <footer
+            style="border-top:1px solid var(--dim); padding:28px 40px; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:var(--muted); letter-spacing:0.15em;">
+            <div>// claudebridge · 2026</div>
+            <a href="https://github.com/Nesbesss/claudebridge" target="_blank"
+                style="color:var(--muted); text-decoration:none;">github ↗</a>
+        </footer>
+    </div>
+
+</body>
+
+</html>

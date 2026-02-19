@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>overview / docs / claudebridge</title>
+  <script type="module" crossorigin src="../assets/main-D6XrehnB.js"></script>
+  <link rel="stylesheet" crossorigin href="../assets/main-Mt7pFx2-.css">
+</head>
+
+<body>
+    <div id="cursor"></div>
+    <div class="toast" id="toast">COPIED TO CLIPBOARD</div>
+
+    <div class="page visible" id="page">
+        <canvas id="ascii-bg"></canvas>
+        <nav>
+            <div class="nav-logo">// claudebridge</div>
+            <div class="nav-links">
+                <a href="../index.html">home</a>
+                <a href="index.html" class="active">docs</a>
+                <a href="../install.html">install</a>
+                <a href="../models.html">models</a>
+                <a href="https://github.com/Nesbesss/claudebridge" target="_blank">github ↗</a>
+            </div>
+            <div class="nav-tag" style="display:flex; align-items:center; gap:16px;">
+                <button class="theme-toggle" onclick="toggleTheme(event)"><i>🌙</i></button>
+                <div><span class="status-dot"></span>v2.1.0 · stable</div>
+            </div>
+        </nav>
+
+        <div class="docs-container">
+            <!-- SIDEBAR -->
+            <aside class="docs-sidebar">
+                <div class="docs-sidebar-label">documentation</div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Basics</div>
+                    <div class="docs-nav-links">
+                        <a href="index.html" class="docs-nav-link active">Overview</a>
+                        <a href="quickstart.html" class="docs-nav-link">Quickstart</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Setup</div>
+                    <div class="docs-nav-links">
+                        <a href="installation.html" class="docs-nav-link">Installation</a>
+                        <a href="authentication.html" class="docs-nav-link">Authentication</a>
+                        <a href="wizard.html" class="docs-nav-link">Interactive Wizard</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Core Concepts</div>
+                    <div class="docs-nav-links">
+                        <a href="intercepts.html" class="docs-nav-link">Live Intercepts ($$)</a>
+                        <a href="swapping.html" class="docs-nav-link">Model Swapping</a>
+                        <a href="profiles.html" class="docs-nav-link">Profiles & Persistence</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Reference</div>
+                    <div class="docs-nav-links">
+                        <a href="cli.html" class="docs-nav-link">CLI Flags</a>
+                        <a href="protocol.html" class="docs-nav-link">Protocol Spec</a>
+                    </div>
+                </div>
+
+                <div class="docs-nav-group">
+                    <div class="docs-nav-title">Advanced</div>
+                    <div class="docs-nav-links">
+                        <a href="routing.html" class="docs-nav-link">Agentic Routing</a>
+                        <a href="caching.html" class="docs-nav-link">Semantic Caching</a>
+                        <a href="doctor.html" class="docs-nav-link">The Doctor Tool</a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="docs-content">
+                <section class="docs-section">
+                    <h1 class="docs-title">Overview</h1>
+                    <p class="docs-subtitle">ClaudeBridge is a high-performance proxy kernel that bridges Anthropic's
+                        Claude Code with elite LLM providers.</p>
+                    <p class="docs-text">
+                        It acts as a protocol translator, intercepting the standard Anthropic signals and re-routing
+                        them to any of the 31 validated provider nodes.
+                        Whether you need the ultra-low latency of Groq, the reasoning power of DeepSeek-R1, or the local
+                        privacy of Ollama, ClaudeBridge provides a unified interface for all your agentic tasks.
+                    </p>
+
+                    <h3 class="docs-subheading">Core Capabilities</h3>
+                    <ul class="docs-list">
+                        <li><strong>Protocol Translation:</strong> Seamlessly converts Anthropic's message format to
+                            OpenAI, Mistral, and Ollama APIs.</li>
+                        <li><strong>Live Intercepts:</strong> Control your model and provider directly from the chat
+                            using <code>$$</code> commands.</li>
+                        <li><strong>Agentic Routing:</strong> Automatically steer simple tasks to fast models and
+                            complex
+                            logic to reasoning-heavy models.</li>
+                        <li><strong>Semantic Caching:</strong> Reuse previous generations to save cost and achieve
+                            near-zero
+                            latency for similar queries.</li>
+                    </ul>
+
+                    <h3 class="docs-subheading">Getting Started</h3>
+                    <p class="docs-text">New users should start with the <a href="quickstart.html">Quickstart</a> guide,
+                        which covers the 60-second installation and configuration flow using the interactive wizard.</p>
+
+                    <h3 class="docs-subheading">Navigating the Docs</h3>
+                    <p class="docs-text">The documentation is split into four primary tracks:</p>
+                    <ul class="docs-list">
+                        <li><strong>Basics:</strong> Installation, authentication, and quickstart guides.</li>
+                        <li><strong>Core Concepts:</strong> Detailed guides on how intercepts, swapping, and profiles
+                            work.</li>
+                        <li><strong>Reference:</strong> Technical specifications for the CLI and internal protocol.</li>
+                        <li><strong>Advanced:</strong> Performance tuning, agentic routing, and the Doctor tool.</li>
+                    </ul>
+                </section>
+            </main>
+        </div>
+
+        <footer
+            style="border-top:1px solid var(--dim); padding:28px 40px; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:var(--muted); letter-spacing:0.15em;">
+            <div>// claudebridge · 2026</div>
+            <a href="https://github.com/Nesbesss/claudebridge" target="_blank"
+                style="color:var(--muted); text-decoration:none;">github ↗</a>
+        </footer>
+    </div>
+
+</body>
+
+</html>

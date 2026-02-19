@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>install / claudebridge</title>
+  <script type="module" crossorigin src="./assets/main-D6XrehnB.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-Mt7pFx2-.css">
+</head>
+
+<body>
+    <div id="cursor"></div>
+    <div class="toast" id="toast">COPIED TO CLIPBOARD</div>
+
+    <div class="page visible" id="page">
+        <canvas id="ascii-bg"></canvas>
+        <nav>
+            <div class="nav-logo">// claudebridge</div>
+            <div class="nav-links">
+                <a href="index.html">home</a>
+                <a href="docs/index.html">docs</a>
+                <a href="install.html" class="active">install</a>
+                <a href="models.html">models</a>
+                <a href="https://github.com/Nesbesss/claudebridge" target="_blank">github ↗</a>
+            </div>
+            <div class="nav-tag" style="display:flex; align-items:center; gap:16px;">
+                <button class="theme-toggle" onclick="toggleTheme(event)"><i>🌙</i></button>
+                <div><span class="status-dot"></span>v2.1.0 · stable</div>
+            </div>
+        </nav>
+
+        <section class="section">
+            <div class="section-label">journey</div>
+            <h2 class="section-title">The Setup Wizard.</h2>
+            <p style="color:var(--muted); font-size:12px; line-height:1.7; margin-bottom:60px; max-width:700px;">
+                Launch the interactive bridge configurator by running <code
+                    style="color:var(--accent2)">npx claudebridge --wizard</code>.
+                Follow the 5-step kernel initialization sequence below to link your preferred provider.
+            </p>
+
+            <!-- WIZARD STEPS -->
+            <div style="display: flex; flex-direction: column; gap: 40px;">
+
+                <!-- STEP 1 -->
+                <div style="display: grid; grid-template-columns: 100px 1fr; gap: 20px; align-items: start;">
+                    <div style="font-family:'VT323'; font-size:40px; color:var(--accent); line-height:1;">01</div>
+                    <div>
+                        <h3 style="font-family:'VT323'; font-size:24px; color:var(--fg); margin-bottom:10px;">Select
+                            Provider</h3>
+                        <p style="font-size:11px; color:var(--muted); margin-bottom:20px;">Choose from 28+ validated
+                            nodes including local (Ollama) and cloud (Groq). Type the number corresponding to your node.
+                        </p>
+                        <div
+                            style="background:#18141f; border:1px solid #2a253a; padding:15px 25px; font-size:12px; color:#ede5ff;">
+                            <span style="color:var(--accent)">›</span> Provider number <span
+                                style="color:var(--muted)">(default: 1)</span>: <span
+                                style="border-bottom:2px solid var(--accent); color:var(--accent);">6</span><span
+                                class="typed-cursor"></span>
+                        </div>
+                        <p style="font-size:10px; color:var(--accent); margin-top:10px;">⌨ TIP: Simply press
+                            <b>Enter</b> to select node 01 (Claude.ai Web).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div style="display: grid; grid-template-columns: 100px 1fr; gap: 20px; align-items: start;">
+                    <div style="font-family:'VT323'; font-size:40px; color:var(--accent2); line-height:1;">02</div>
+                    <div>
+                        <h3 style="font-family:'VT323'; font-size:24px; color:var(--fg); margin-bottom:10px;">
+                            Authentication</h3>
+                        <p style="font-size:11px; color:var(--muted); margin-bottom:15px;">Paste your API key. For
+                            specialized nodes, follow these prompts:</p>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+                            <div style="border:1px solid var(--dim); padding:15px; background:var(--card);">
+                                <h4 style="font-size:10px; color:var(--fg); margin-bottom:8px;">GITHUB COPILOT</h4>
+                                <p style="font-size:9px; color:var(--muted);">A browser window will open. Paste the
+                                    8-digit device code shown in your terminal.</p>
+                            </div>
+                            <div style="border:1px solid var(--dim); padding:15px; background:var(--card);">
+                                <h4 style="font-size:10px; color:var(--fg); margin-bottom:8px;">CLAUDE WEB SESSION</h4>
+                                <p style="font-size:9px; color:var(--muted);">Paste your <code>claude.ai</code> browser
+                                    cookie string to access free-tier reasoning nodes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3 -->
+                <div style="display: grid; grid-template-columns: 100px 1fr; gap: 20px; align-items: start;">
+                    <div style="font-family:'VT323'; font-size:40px; color:var(--accent3); line-height:1;">03</div>
+                    <div>
+                        <h3 style="font-family:'VT323'; font-size:24px; color:var(--fg); margin-bottom:10px;">Model
+                            Discovery</h3>
+                        <p style="font-size:11px; color:var(--muted); margin-bottom:20px;">The bridge will pulse your
+                            provider's <code style="color:var(--accent3)">/v1/models</code> endpoint and list all
+                            available IDs. Type the number of the model you wish to use as your session primary.</p>
+                        <div
+                            style="background:#18141f; border:1px solid #2a253a; padding:15px 25px; font-size:12px; color:#ede5ff;">
+                            <span style="color:var(--accent3)">✔</span> Found 12 models available<br>
+                            <span style="color:var(--accent3)">›</span> Model <span style="color:var(--muted)">(# / n /
+                                p)</span>: <span
+                                style="border-bottom:2px solid var(--accent3); color:var(--accent3);">3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4 -->
+                <div style="display: grid; grid-template-columns: 100px 1fr; gap: 20px; align-items: start;">
+                    <div style="font-family:'VT323'; font-size:40px; color:var(--accent4); line-height:1;">04</div>
+                    <div>
+                        <h3 style="font-family:'VT323'; font-size:24px; color:var(--fg); margin-bottom:10px;">Bridge
+                            Init</h3>
+                        <p style="font-size:11px; color:var(--muted); margin-bottom:20px;">Finalize your local port
+                            (default 8787). The wizard will then perform a global system configuration.</p>
+                        <div style="border-left:3px solid var(--accent); padding-left:20px;">
+                            <p style="font-size:10px; color:var(--fg); font-weight:bold;">AUTO-CONFIGURED FILES:</p>
+                            <p style="font-size:10px; color:var(--muted); margin-top:5px;">• ~/.claudebridge.env (Global
+                                Config)</p>
+                            <p style="font-size:10px; color:var(--muted);">• ~/.claude/settings.json (Claude Code
+                                Integration)</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <footer
+            style="border-top:1px solid var(--dim); padding:28px 40px; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:var(--muted); letter-spacing:0.15em;">
+            <div>// claudebridge · 2026</div>
+            <a href="https://github.com/Nesbesss/claudebridge" target="_blank"
+                style="color:var(--muted); text-decoration:none;">github ↗</a>
+        </footer>
+    </div>
+
+</body>
+
+</html>

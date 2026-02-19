@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>models / claudebridge</title>
+  <script type="module" crossorigin src="./assets/main-D6XrehnB.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-Mt7pFx2-.css">
+</head>
+
+<body>
+    <div id="cursor"></div>
+    <div class="toast" id="toast">COPIED TO CLIPBOARD</div>
+
+    <div class="page visible" id="page">
+        <canvas id="ascii-bg"></canvas>
+        <nav>
+            <div class="nav-logo">// claudebridge</div>
+            <div class="nav-links">
+                <a href="index.html">home</a>
+                <a href="docs/index.html">docs</a>
+                <a href="install.html">install</a>
+                <a href="models.html" class="active">models</a>
+                <a href="https://github.com/Nesbesss/claudebridge" target="_blank">github ↗</a>
+            </div>
+            <div class="nav-tag" style="display:flex; align-items:center; gap:16px;">
+                <button class="theme-toggle" onclick="toggleTheme(event)"><i>🌙</i></button>
+                <div><span class="status-dot"></span>v2.1.0 · stable</div>
+            </div>
+        </nav>
+
+        <section class="section">
+            <div class="section-label">registry</div>
+            <h2 class="section-title">Verified Model Nodes.</h2>
+            <p style="color:var(--muted); font-size:12px; line-height:1.7; margin-bottom:50px; max-width:800px;">
+                ClaudeBridge kernel contains native mapping for 31 validated provider nodes.
+                Input <code style="color:var(--accent2)">$$&lt;id&gt;</code> to swap during any turn.
+            </p>
+
+            <!-- PROVIDER GRID -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1px; background: var(--dim); border: 1px solid var(--dim);">
+
+                <!-- 1 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: claude-web</div>
+                    <span class="feat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">Claude.ai (Free)</div>
+                    <div class="feat-desc">Direct session bridging via browser cookies. Includes experimental reasoning
+                        support.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-num">ID: opencode-zen</div>
+                    <span class="feat-icon">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M16.278 2c1.156 0 2.093.927 2.093 2.07v12.501a.74.74 0 00.744.709.74.74 0 00.743-.709V9.099a2.06 2.06 0 012.071-2.049A2.06 2.06 0 0124 9.1v6.561a.649.649 0 01-.652.645.649.649 0 01-.653-.645V9.1a.762.762 0 00-.766-.758.762.762 0 00-.766.758v7.472a2.037 2.037 0 01-2.048 2.026 2.037 2.037 0 01-2.048-2.026v-12.5a.785.785 0 00-.788-.753.785.785 0 00-.789.752l-.001 15.904A2.037 2.037 0 0113.441 22a2.037 2.037 0 01-2.048-2.026V18.04c0-.356.292-.645.652-.645.36 0 .652.289.652.645v1.934c0 .263.142.506.372.638.23.131.514.131.744 0a.734.734 0 00.372-.638V4.07c0-1.143.937-2.07 2.093-2.07zm-5.674 0c1.156 0 2.093.927 2.093 2.07v11.523a.648.648 0 01-.652.645.648.648 0 01-.652-.645V4.07a.785.785 0 00-.789-.78.785.785 0 00-.789.78v14.013a2.06 2.06 0 01-2.07 2.048 2.06 2.06 0 01-2.071-2.048V9.1a.762.762 0 00-.766-.758.762.762 0 00-.766.758v3.8a2.06 2.06 0 01-2.071 2.049A2.06 2.06 0 010 12.9v-1.378c0-.357.292-.646.652-.646.36 0 .653.29.653.646V12.9c0 .418.343.757.766.757s.766-.339.766-.757V9.099a2.06 2.06 0 012.07-2.048 2.06 2.06 0 012.071 2.048v8.984c0 .419.343.758.767.758.423 0 .766-.339.766-.758V4.07c0-1.143.937-2.07 2.093-2.07z" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">OpenCode Zen</div>
+                    <div class="feat-desc">Primary kernel aggregator for high-accuracy coding tasks. Optimized for
+                        MiniMax models.</div>
+                </div>
+                <!-- 3 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: github-copilot</div>
+                    <span class="feat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 1.27a11 11 0 00-3.48 21.46c.55.09.73-.24.73-.53v-1.84c-3.03.66-3.67-1.46-3.67-1.46-.5-1.27-1.2-1.61-1.2-1.61-.98-.67.08-.66.08-.66 1.1.08 1.67 1.13 1.67 1.13.97 1.66 2.54 1.18 3.17.9.1-.7.37-1.18.69-1.45-2.42-.27-4.97-1.21-4.97-5.39 0-1.2.42-2.18 1.12-2.95-.11-.28-.48-1.39.11-2.9 0 0 .91-.29 3.01 1.12A10.5 10.5 0 0112 5.8a10.5 10.5 0 012.77.38c2.1-1.41 3.01-1.12 3.01-1.12.59 1.51.22 2.62.11 2.9.7.77 1.12 1.75 1.12 2.95 0 4.19-2.55 5.12-4.98 5.39.39.33.74.99.74 1.99v2.95c0 .3.18.63.74.52A11 11 0 0012 1.27z" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">GitHub Copilot</div>
+                    <div class="feat-desc">Bridge into Copilot's internal GPT-4o and Claude nodes with device-code auth.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-num">ID: openrouter</div>
+                    <span class="feat-icon">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M16.804 1.957l7.22 4.105v.087L16.73 10.21l.017-2.117-.821-.03c-1.059-.028-1.611.002-2.268.11-1.064.175-2.038.577-3.147 1.352L8.345 11.03c-.284.195-.495.336-.68.455l-.515.322-.397.234.385.23.53.338c.476.314 1.17.796 2.701 1.866 1.11.775 2.083 1.177 3.147 1.352l.3.045c.694.091 1.375.094 2.825.033l.022-2.159 7.22 4.105v.087L16.589 22l.014-1.862-.635.022c-1.386.042-2.137.002-3.138-.162-1.694-.28-3.26-.926-4.881-2.059l-2.158-1.5a21.997 21.997 0 00-.755-.498l-.467-.28a55.927 55.927 0 00-.76-.43C2.908 14.73.563 14.116 0 14.116V9.888l.14.004c.564-.007 2.91-.622 3.809-1.124l1.016-.58.438-.274c.428-.28 1.072-.726 2.686-1.853 1.621-1.133 3.186-1.78 4.881-2.059 1.152-.19 1.974-.213 3.814-.138l.02-1.907z" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">OpenRouter</div>
+                    <div class="feat-desc">Universal bridge for 200+ models. One API key for every model in existence.
+                    </div>
+                </div>
+                <!-- 5 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: openai</div>
+                    <span class="feat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M22.28 12.184c-3.14-1.328-4.037-4.987-2.106-8.136a.412.412 0 0 0-.065-.544c-2.472-2.036-6.155-1.5-8.19 1.192-.47.621-1.442.621-1.912 0-2.035-2.692-5.718-3.228-8.19-1.192a.412.412 0 0 0-.065.544c1.931 3.149 1.034 6.808-2.106 8.136a.412.412 0 0 0-.176.518c1.328 3.141 4.987 4.037 8.136 2.106a.412.412 0 0 0 .544.065c2.036 2.472 1.5 6.155-1.192 8.19a.412.412 0 0 0-.056.609c.621.47 1.442.47 1.912 0 .416-.314.956-.314 1.328 0a.412.412 0 0 0 .544.065c2.035-2.472 5.718-1.5 8.19 1.192a.412.412 0 0 0 .609-.065c3.141-1.328 4.037-4.988 2.106-8.136a.412.412 0 0 0-.112-.518z" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">OpenAI</div>
+                    <div class="feat-desc">Standard GPT-4o, O1-Preview, and Mini support via v1 endpoints.</div>
+                </div>
+                <!-- 6 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: groq</div>
+                    <span class="feat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L2 12l10 10 10-10L12 2z" style="fill:#f5c97a;" />
+                            <path d="M10 17l5-5-5-5v10z" style="fill:#000;" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">Groq (LPU)</div>
+                    <div class="feat-desc">Ultra-low latency inference (140+ tk/s) on Llama-3.3-70B.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-num">ID: together</div>
+                    <span class="feat-icon">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M17.385 11.23a4.615 4.615 0 100-9.23 4.615 4.615 0 000 9.23zm0 10.77a4.615 4.615 0 100-9.23 4.615 4.615 0 000 9.23zm-10.77 0a4.615 4.615 0 100-9.23 4.615 4.615 0 000 9.23z"
+                                opacity=".2" />
+                            <circle cx="6.615" cy="6.615" r="4.615" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">Together AI</div>
+                    <div class="feat-desc">High-throughput cluster for Llama, Qwen, and specialized architectures.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-num">ID: fireworks</div>
+                    <span class="feat-icon">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M14.8 5l-2.801 6.795L9.195 5H7.397l3.072 7.428a1.64 1.64 0 003.038.002L16.598 5H14.8zm1.196 10.352l5.124-5.244-.699-1.669-5.596 5.739a1.664 1.664 0 00-.343 1.807 1.642 1.642 0 001.516 1.012L16 17l8-.02-.699-1.669-7.303.041h-.002zM2.88 10.104l.699-1.669 5.596 5.739c.468.479.603 1.189.343 1.807a1.643 1.643 0 01-1.516 1.012l-8-.018-.002.002.699-1.669 7.303.042-5.122-5.246z" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">Fireworks AI</div>
+                    <div class="feat-desc">Fast inference for mixture-of-experts (MoE) models like Mixtral.</div>
+                </div>
+                <!-- 9 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: mistral</div>
+                    <span class="feat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" style="fill:#ff5722;" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">Mistral AI</div>
+                    <div class="feat-desc">Privacy-first European nodes. Support for Codestral and Mistral Large.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-num">ID: xai</div>
+                    <span class="feat-icon">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.489h2.039L6.482 3.239H4.294L17.61 20.642z" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">xAI (Grok)</div>
+                    <div class="feat-desc">Direct access to Grok-2 and Grok-Beta reasoning nodes.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feat-num">ID: deepinfra</div>
+                    <span class="feat-icon">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M3.294 7.821A2.297 2.297 0 011 5.527a2.297 2.297 0 012.294-2.295A2.297 2.297 0 015.59 5.527 2.297 2.297 0 013.294 7.82zm0-3.688a1.396 1.396 0 000 2.79 1.396 1.396 0 000-2.79zM3.294 14.293A2.297 2.297 0 011 11.998a2.297 2.297 0 012.294-2.294 2.297 2.297 0 012.295 2.294 2.297 2.297 0 01-2.295 2.295zm0-3.688a1.395 1.395 0 000 2.788 1.395 1.395 0 100-2.788zM3.294 20.761A2.297 2.297 0 011 18.467a2.297 2.297 0 012.294-2.295 2.297 2.297 0 012.295 2.295 2.297 2.297 0 01-2.295 2.294zm0-3.688a1.396 1.396 0 000 2.79 1.396 1.396 0 000-2.79zM20.738 7.821a2.297 2.297 0 01-2.295-2.294 2.297 2.297 0 012.294-2.295 2.297 2.297 0 012.295 2.295 2.297 2.297 0 01-2.294 2.294zm0-3.688a1.396 1.396 0 101.395 1.395c0-.77-.626-1.395-1.395-1.395zM20.738 14.293a2.297 2.297 0 01-2.295-2.295 2.297 2.297 0 012.294-2.294 2.297 2.297 0 012.295 2.294 2.297 2.297 0 01-2.294 2.295zm0-3.688c-.769 0-1.395.625-1.395 1.393a1.396 1.396 0 002.79 0c0-.77-.626-1.393-1.395-1.393zM20.738 20.761a2.297 2.297 0 01-2.295-2.294 2.297 2.297 0 012.294-2.295 2.297 2.297 0 012.295 2.295 2.297 2.297 0 01-2.294 2.294zm0-3.688a1.396 1.396 0 101.395 1.395c0-.77-.626-1.395-1.395-1.395zM12.016 11.057a2.297 2.297 0 01-2.294-2.294 2.297 2.297 0 012.294-2.295 2.297 2.297 0 012.295 2.295 2.297 2.297 0 01-2.295 2.294zm0-3.688a1.396 1.396 0 101.395 1.395c0-.77-.625-1.395-1.395-1.395zM12.017 4.589a2.297 2.297 0 01-2.295-2.295A2.297 2.297 0 0112.017 0a2.297 2.297 0 012.294 2.294 2.297 2.297 0 01-2.294 2.295zm0-3.688a1.396 1.396 0 101.395 1.395c0-.77-.626-1.395-1.395-1.395zM12.017 17.529a2.297 2.297 0 01-2.295-2.295 2.297 2.297 0 012.295-2.294 2.297 2.297 0 012.294 2.294 2.297 2.297 0 01-2.294 2.295zm0-3.688a1.396 1.396 0 101.395 1.395c0-.77-.626-1.395-1.395-1.395zM12.016 24a2.297 2.297 0 01-2.295-2.295 2.297 2.297 0 012.294-2.294 2.297 2.297 0 012.295 2.294A2.297 2.297 0 0112.016 24zm0-3.688a1.396 1.396 0 101.395 1.395c0-.77-.625-1.395-1.395-1.395z" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">DeepInfra</div>
+                    <div class="feat-desc">Scalable Llama and Qwen hosting with ultra-competitive pricing.</div>
+                </div>
+                <!-- 12 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: perplexity</div>
+                    <span class="feat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" />
+                            <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" fill="none" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">Perplexity</div>
+                    <div class="feat-desc">Online search grounded inference via Sonar and Llama-3 nodes.</div>
+                </div>
+                <!-- 13 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: nvidia-nim</div>
+                    <span class="feat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">NVIDIA NIM</div>
+                    <div class="feat-desc">Optimized Llama-3.1 running on NVIDIA's global GPU fleet.</div>
+                </div>
+                <!-- 14 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: cerebras</div><span class="feat-icon">🧠</span>
+                    <div class="feat-title">Cerebras</div>
+                    <div class="feat-desc">World-record speed (800+ tk/s) on CS-3 hardware.</div>
+                </div>
+                <!-- 15 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: sambanova</div><span class="feat-icon">🟠</span>
+                    <div class="feat-title">SambaNova</div>
+                    <div class="feat-desc">Enterprise-grade Llama-3.1 inference on custom DataScale clusters.</div>
+                </div>
+                <!-- 16 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: anyscale</div><span class="feat-icon">📐</span>
+                    <div class="feat-title">Anyscale</div>
+                    <div class="feat-desc">Production-grade Ray-powered inference cluster for Llama.</div>
+                </div>
+                <!-- 17 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: deepseek</div>
+                    <span class="feat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">DeepSeek</div>
+                    <div class="feat-desc">Native support for DeepSeek-R1 reasoning and V3 coding kernels.</div>
+                </div>
+                <!-- 18 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: moonshot</div><span class="feat-icon">🌙</span>
+                    <div class="feat-title">Moonshot AI</div>
+                    <div class="feat-desc">Optimized for massive context windows and logical reasoning.</div>
+                </div>
+                <!-- 19 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: 01ai</div><span class="feat-icon">🔢</span>
+                    <div class="feat-title">01.AI</div>
+                    <div class="feat-desc">State-of-the-art Yi-Large models with Chinese language optimization.</div>
+                </div>
+                <!-- 20 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: hyperbolic</div><span class="feat-icon">🌀</span>
+                    <div class="feat-title">Hyperbolic</div>
+                    <div class="feat-desc">Ultra-fast Llama-3.1 inference on H100 clusters.</div>
+                </div>
+                <!-- 21 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: novita</div><span class="feat-icon"> ✨</span>
+                    <div class="feat-title">Novita AI</div>
+                    <div class="feat-desc">Serverless GPU orchestration for Llama and Flux models.</div>
+                </div>
+                <!-- 22 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: siliconflow</div><span class="feat-icon">🌊</span>
+                    <div class="feat-title">SiliconFlow</div>
+                    <div class="feat-desc">High-concurrency Qwen and DeepSeek nodes for agentic teams.</div>
+                </div>
+                <!-- 23 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: inference-net</div><span class="feat-icon">📡</span>
+                    <div class="feat-title">Inference.net</div>
+                    <div class="feat-desc">Reliable and cost-effective distributed Llama inference.</div>
+                </div>
+                <!-- 24 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: friendli</div><span class="feat-icon">🫱</span>
+                    <div class="feat-title">FriendliAI</div>
+                    <div class="feat-desc">Dedicated clusters for ultra-consistent latency performance.</div>
+                </div>
+                <!-- 25 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: ollama</div>
+                    <span class="feat-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zM12 6a6 6 0 100 12 6 6 0 000-12z" />
+                        </svg>
+                    </span>
+                    <div class="feat-title">Ollama (local)</div>
+                    <div class="feat-desc">Zero-latency, 100% private inference on local GPU hardware.</div>
+                </div>
+                <!-- 26 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: lmstudio</div><span class="feat-icon">🖥️</span>
+                    <div class="feat-title">LM Studio (local)</div>
+                    <div class="feat-desc">Local GGUF model serving via internal OpenAI-compatible bridge.</div>
+                </div>
+                <!-- 27 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: jan</div><span class="feat-icon">🤖</span>
+                    <div class="feat-title">Jan (local)</div>
+                    <div class="feat-desc">Open-source desktop interface for local model orchestration.</div>
+                </div>
+                <!-- 28 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: llamacpp</div><span class="feat-icon">🔧</span>
+                    <div class="feat-title">Llama.cpp</div>
+                    <div class="feat-desc">Direct weight loading and inference via Llama.cpp server.</div>
+                </div>
+                <!-- 29 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: vllm</div><span class="feat-icon">⚡</span>
+                    <div class="feat-title">vLLM</div>
+                    <div class="feat-desc">High-throughput local/remote inference server orchestration.</div>
+                </div>
+                <!-- 30 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: custom</div><span class="feat-icon">🛠️</span>
+                    <div class="feat-title">Custom Endpoint</div>
+                    <div class="feat-desc">Bring your own URL. Supports any server following the OpenAI spec.</div>
+                </div>
+                <!-- 31 -->
+                <div class="feature-card">
+                    <div class="feat-num">ID: modal-custom</div><span class="feat-icon">🧱</span>
+                    <div class="feat-title">Modal Custom</div>
+                    <div class="feat-desc">Direct bridging for models deployed on serverless Modal functions.</div>
+                </div>
+
+            </div>
+        </section>
+
+        <footer
+            style="border-top:1px solid var(--dim); padding:28px 40px; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:var(--muted); letter-spacing:0.15em;">
+            <div>// claudebridge · 2026</div>
+            <a href="https://github.com/Nesbesss/claudebridge" target="_blank"
+                style="color:var(--muted); text-decoration:none;">github ↗</a>
+        </footer>
+    </div>
+
+</body>
+
+</html>
